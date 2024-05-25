@@ -98,11 +98,12 @@ async def upload_pdf(file: UploadFile = File(...), db: SessionLocal = Depends(ge
 async def ask_question(document_id: int, question: str, db: SessionLocal = Depends(get_db)):
     # Fetch the document text from database
     document = db.query(Document).filter(Document.id == document_id).first()
+    print(document)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
 
     # Process the question and document content to generate answer
     # Placeholder for NLP processing with LangChain/LLamaIndex
     answer = f"Processed answer for the question: {question} based on document ID: {document_id}"
-
+    print(answer)
     return {"question": question, "answer": answer}

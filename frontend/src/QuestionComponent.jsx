@@ -32,25 +32,23 @@ const QuestionComponent = ({ documentId }) => {
     console.log(answer);
 
     return (
-        <div>
-            <div className='m-10 px-10 flex gap-4'>
-                <img src={icon} alt="Logo" />
-                <p className='pt-2'>{answer}</p>
-            </div>
-            <div className='relative'>
+        <div className=''>
+        <div className='m-10 px-10 flex gap-4'>
+            <img src={icon}/>
+            <p className='pt-2'>{answer}</p>
+        </div>
+            <div className='releavtive'>
                 <div className='absolute w-full top-[78%]'>
-                    <form className='relative px-10 rounded' autoComplete="off" onSubmit={handleAskQuestion}>
-                        <input
-                            type="text_content"
-                            className="w-full px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2 shadow-md"
-                            placeholder='Please enter text...'
-                            value={question}
-                            onChange={handleQuestionChange}
-                            autoFocus
+                    <form className='relative px-10 rounded rounded-2 ' autoComplete="off" onSubmit={handleAskQuestion}>
+                        <input class="w-full px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2 shadow-md" 
+                        placeholder='Please enter text...' 
+                        type="text_content"
+                        value={question}
+                        onChange={handleQuestionChange}
+                        autofocus 
+                            
                         />
-                        <Button className='absolute right-4 top-1/2 transform -translate-y-1/2' type='submit'>
-                            <SendIcon className='text-gray-500' />
-                        </Button>
+                        <Button className='absolute left-[92%] top-[-45px] z-50' type='submit'><SendIcon className='text-gray-500' /></Button>
                     </form>
                 </div>
             </div>
