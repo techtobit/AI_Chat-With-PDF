@@ -49,7 +49,7 @@ const UploadComponent = ({ onUploadSuccess }) => {
     });
 
     return (
-        <div className='flex px-10 justify-between'>
+        <div className='flex px-10 py-4 justify-between border border-b-gray-100 shadow-sm'>
             <div>
                 <img src={logo} />
             </div>
