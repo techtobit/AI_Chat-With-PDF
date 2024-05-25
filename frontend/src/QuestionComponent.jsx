@@ -32,9 +32,9 @@ const QuestionComponent = ({ documentId }) => {
         <div className='m-10 px-10'>{answer}</div>
             <div className='releavtive'>
                 <div className='absolute w-full top-[75%]'>
-                    <form className='relative px-10 rounded rounded-2' autoComplete="off">
-                        <input type="text" class="w-full px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2" placeholder='Please enter text...' name="tags" autofocus />
-                        <Button className='absolute left-[92%] top-[-45px] z-50 outline-none focus:boder-none' type='submit'><SendIcon className='text-gray-500' /></Button>
+                    <form className='relative px-10 rounded rounded-2 ' autoComplete="off">
+                        <input type="text" class="w-full px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2 shadow-md" placeholder='Please enter text...' name="tags" autofocus />
+                        <Button className='absolute left-[92%] top-[-45px] z-50' type='submit'><SendIcon className='text-gray-500' /></Button>
                         {/* <FormControl className='z-10 outline-1 "outline outline-offset-2 outline-blue-500' fullWidth sx={{}}>
                             <OutlinedInput placeholder="Please enter text" />
                         </FormControl> */}
