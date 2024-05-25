@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -14,17 +14,13 @@ const UploadComponent = ({ onUploadSuccess }) => {
         setFile(event.target.files[0]);
     };
 
-    const handleUpload = async () => {
-        if (!file) {
-            setMessage('Please select a file');
-            return;
-        }
-
+    useEffect(() => {
+        if(file){
         const formData = new FormData();
         formData.append('file', file);
-        console.log(file);
+        setFile(null)
         try {
-            const response = await axios.post('http://localhost:8000/upload/', formData, {
+            const response = axios.post('http://localhost:8000/upload/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -34,7 +30,9 @@ const UploadComponent = ({ onUploadSuccess }) => {
         } catch (error) {
             setMessage('File upload failed');
         }
-    };
+        }
+    },[file])
+
 
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
@@ -56,7 +54,7 @@ const UploadComponent = ({ onUploadSuccess }) => {
             <div>
                 <Button
                     className='px-2 text-black'
-                    onClick={handleUpload}
+                    // onChange={handleUpload}
                     component="label"
                     role={undefined}
                     variant="outlined"
@@ -64,9 +62,9 @@ const UploadComponent = ({ onUploadSuccess }) => {
                     startIcon={<AddCircleOutlineIcon />}
                 >
                     Upload PDF
-                    <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+                    <VisuallyHiddenInput  type="file" onChange={handleFileChange}/>
                 </Button>
-                {message && <p>{message}</p>}
+                {/* {message && <p>{message}</p>} */}
             </div>
         </div>
     );

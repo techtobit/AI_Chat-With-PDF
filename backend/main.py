@@ -11,8 +11,6 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
     "http://localhost",
     "http://localhost:8080",
 ]
@@ -25,11 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.get("/")
 async def main():
     return {"message": "Hello World"}
-origins = ['http://localhost:3000', 'https://localhost:3000']
+origins = ['http://localhost:5173', 'https://localhost:5173']
 
 app.add_middleware(
     CORSMiddleware,
