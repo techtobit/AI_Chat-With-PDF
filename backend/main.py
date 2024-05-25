@@ -1,5 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -8,13 +7,45 @@ import fitz  # PyMuPDF
 import os
 import uuid
 
+from fastapi.middleware.cors import CORSMiddleware
+app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/")
+async def main():
+    return {"message": "Hello World"}
+origins = ['http://localhost:3000', 'https://localhost:3000']
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-app = FastAPI()
+
 
 # Models
 class Document(Base):
@@ -25,6 +56,10 @@ class Document(Base):
     text_content = Column(Text)
 
 Base.metadata.create_all(bind=engine)
+
+# Ensure the uploads directory exists
+if not os.path.exists('uploads'):
+    os.makedirs('uploads')
 
 # Dependency
 def get_db():

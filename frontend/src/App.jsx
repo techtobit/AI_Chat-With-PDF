@@ -3,7 +3,7 @@ import UploadComponent from './UploadComponent';
 import QuestionComponent from './QuestionComponent';
 
 function App() {
-    const [documentId, setDocumentId] = useState(null);
+    const [documentId, setDocumentId] = useState(1);
 
     return (
         <div className="bg-white  text-black h-screen w-screen justify-center">
