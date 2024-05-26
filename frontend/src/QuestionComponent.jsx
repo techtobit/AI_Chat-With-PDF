@@ -39,7 +39,7 @@ const QuestionComponent = ({ documentId }) => {
     return (
         <div className=''>
         <div className='m-10 px-10 flex gap-4 flex-col'>
-        <div>
+        <div className='pb-10'>
             {showQuestion ? <div className='flex'>
                 <img className='w-10 h-10 rounded rounded-full' src={userIcon}/>
                 <p className='pt-2 pl-4'>{showQuestion}</p>

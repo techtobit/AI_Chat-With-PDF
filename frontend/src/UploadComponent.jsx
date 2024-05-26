@@ -4,34 +4,46 @@ import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from 'axios';
 import logo from './assets/AI Planet Logo.png';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 const UploadComponent = ({ onUploadSuccess }) => {
     const [file, setFile] = useState(null);
-
+    const [showFile, setShowFile] = useState(null);
     const [message, setMessage] = useState('');
+
+    function getFileName(str) {
+        if (str.length > 22) {
+            return str.substr(0, 10) + '...' + str.substr(-4)
+        }
+        return str
+    }
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
+        const evnetFile = event.target.files[0];
+        if (evnetFile) {
+            const truncatedFileName = getFileName(evnetFile.name)
+            setShowFile(truncatedFileName);
+        }
     };
-
     useEffect(() => {
-        if(file){
-        const formData = new FormData();
-        formData.append('file', file);
-        setFile(null)
-        try {
-            const response = axios.post('http://localhost:8000/upload/', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            setMessage(`File uploaded successfully: ${response.data.filename}`);
-            onUploadSuccess(response.data.id);
-        } catch (error) {
-            setMessage('File upload failed');
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            setFile(null)
+            try {
+                const response = axios.post('http://localhost:8000/upload/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                setMessage(`File uploaded successfully: ${response.data.filename}`);
+                onUploadSuccess(response.data.id);
+            } catch (error) {
+                setMessage('File upload failed');
+            }
         }
-        }
-    },[file])
+    }, [file])
 
 
     const VisuallyHiddenInput = styled('input')({
@@ -51,7 +63,8 @@ const UploadComponent = ({ onUploadSuccess }) => {
             <div>
                 <img src={logo} alt="AI Planet Logo" />
             </div>
-            <div>
+            <div className='flex items-center gap-4'>
+                <div className='px-2 py-[6px] text-green-400 bg-gray-50 rounded rounded-sm font-sm' > {showFile &&  <p><DescriptionIcon/> {showFile}</p>}</div>
                 <Button
                     className='px-2 text-black'
                     // onChange={handleUpload}
@@ -62,7 +75,7 @@ const UploadComponent = ({ onUploadSuccess }) => {
                     startIcon={<AddCircleOutlineIcon />}
                 >
                     Upload PDF
-                    <VisuallyHiddenInput  type="file" onChange={handleFileChange}/>
+                    <VisuallyHiddenInput type="file" onChange={handleFileChange} />
                 </Button>
                 {/* {message && <p>{message}</p>} */}
             </div>
