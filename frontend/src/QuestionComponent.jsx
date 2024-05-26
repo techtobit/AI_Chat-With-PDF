@@ -6,6 +6,7 @@ import icon from './assets/logo.png';
 
 const QuestionComponent = ({ documentId }) => {
     const [question, setQuestion] = useState('');
+    const [loading, setLoading] = useState(false)
     const [answer, setAnswer] = useState('');
 
     const handleQuestionChange = (event) => {
@@ -15,27 +16,42 @@ const QuestionComponent = ({ documentId }) => {
     console.log(question);
 
     const handleAskQuestion = async (event) => {
-        console.log(event);
+        setLoading(true)
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/ask/', {
-                document_id: documentId,
-                question: question
-            });
+            const response = await axios.post(`http://localhost:8000/ask/?document_id=${documentId}&question=${encodeURIComponent(question)}`);
             console.log(response);
             setAnswer(response.data.answer);
         } catch (error) {
+            console.error('Error:', error);
             setAnswer('Failed to get answer');
         }
     };
+    
 
-    console.log(answer);
+    if(answer && loading===true){
+        setLoading(false)
+    } 
 
     return (
         <div className=''>
         <div className='m-10 px-10 flex gap-4'>
+        {
+            (answer) ? 
+            <>
             <img src={icon}/>
             <p className='pt-2'>{answer}</p>
+            </>
+            : ''
+        }
+        {
+            (loading) ? <>
+            <img src={icon}/>
+            <p>loading</p>
+            </>:''
+            
+        }
+
         </div>
             <div className='releavtive'>
                 <div className='absolute w-full top-[78%]'>
