@@ -7,7 +7,7 @@ from datetime import datetime
 import fitz  
 import os
 import uuid
-from langchain.vectorstores import Chroma 
+from langchain_community.vectorstores import Chroma
 from langchain_community.vectorstores import FAISS
 from langchain_community.llms import OpenAI
 from langchain_openai import OpenAIEmbeddings 
@@ -112,7 +112,7 @@ async def ask_question(document_id: int = Query(...), question: str = Query(...)
 
         # Encode the question to find similar documents
         question_embedding = model.encode([question])
-        distances, indices = index.search(question_embedding, k=5)  # Adjust k as needed
+        distances, indices = index.search(question_embedding, k=35)  # Adjust k as needed
 
         # Retrieve the most relevant texts
         relevant_texts = [texts[i] for i in indices[0]]
@@ -122,7 +122,7 @@ async def ask_question(document_id: int = Query(...), question: str = Query(...)
         context = " ".join(relevant_texts)
         result = qa_pipeline(question=question, context=context)
         answer = result['answer']
-
+        print('result :-', answer)
         return {"question": question, "answer": answer}
     except HTTPException as e:
         logger.error(f"HTTP error: {e.detail}")

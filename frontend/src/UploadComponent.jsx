@@ -8,8 +8,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 
 const UploadComponent = ({ onUploadSuccess }) => {
     const [file, setFile] = useState(null);
-    const [showFile, setShowFile] = useState(null);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(null);
 
     function getFileName(str) {
         if (str.length > 22) {
@@ -20,31 +19,62 @@ const UploadComponent = ({ onUploadSuccess }) => {
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
-        const evnetFile = event.target.files[0];
-        if (evnetFile) {
-            const truncatedFileName = getFileName(evnetFile.name)
-            setShowFile(truncatedFileName);
-        }
     };
+
+    // useEffect(() => {
+    //     if (file) {
+    //         const formData = new FormData();
+    //         formData.append('file', file);
+    //         setFile(null)
+    //         try {
+    //             const response = axios.post('http://localhost:8000/upload/', formData, {
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data'
+    //                 }
+
+    //             });
+    //             setMessage(`File uploaded successfully: ${response.data.id}`);
+    //             onUploadSuccess(response.data.id);
+    //             return {errors: false}
+    //         } catch (error) {
+    //         }
+    //     }
+    // }, [file])
+
     useEffect(() => {
         if (file) {
             const formData = new FormData();
             formData.append('file', file);
-            setFile(null)
-            try {
-                const response = axios.post('http://localhost:8000/upload/', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                setMessage(`File uploaded successfully: ${response.data.filename}`);
-                onUploadSuccess(response.data.id);
-            } catch (error) {
-                setMessage('File upload failed');
-            }
-        }
-    }, [file])
 
+            fetch('http://localhost:8000/upload/', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        if(response.status==400){
+                            setMessage('PDF Only')
+                        }
+                        throw new Error(`Error uploading file: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if(data.filename){
+                        const fileName = getFileName(data.filename)
+                        setMessage(fileName)
+                    }
+                    onUploadSuccess(data.id);
+                    setFile(null); 
+                })
+                .catch(error => {
+                    console.error('Error uploading file:', error);
+                    
+                });
+        }
+    }, [file]);
+
+    
 
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
@@ -64,7 +94,9 @@ const UploadComponent = ({ onUploadSuccess }) => {
                 <img src={logo} alt="AI Planet Logo" />
             </div>
             <div className='flex items-center gap-4'>
-                <div className='px-2 py-[6px] text-green-400 bg-gray-50 rounded rounded-sm font-sm' > {showFile &&  <p><DescriptionIcon/> {showFile}</p>}</div>
+            <p></p>
+
+                <div  className={message === 'PDF Only' ? "px-2 py-[6px] text-blck-400 bg-red-100 rounded rounded-sm font-sm" : "px-2 py-[6px] text-green-400 bg-gray-50 rounded rounded-sm font-sm"} > {message && <p><DescriptionIcon /> {message}</p>}</div>
                 <Button
                     className='px-2 text-black'
                     // onChange={handleUpload}
@@ -74,7 +106,7 @@ const UploadComponent = ({ onUploadSuccess }) => {
                     tabIndex={-1}
                     startIcon={<AddCircleOutlineIcon />}
                 >
-                    Upload PDF
+                    <span className='hidden md:flex lg:flex '>Upload PDF</span>
                     <VisuallyHiddenInput type="file" onChange={handleFileChange} />
                 </Button>
                 {/* {message && <p>{message}</p>} */}

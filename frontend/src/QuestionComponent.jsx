@@ -14,6 +14,8 @@ const QuestionComponent = ({ documentId }) => {
 
     const handleQuestionChange = (event) => {
         setQuestion(event.target.value);
+        e.target.reset();
+        
     };
 
 
@@ -28,6 +30,9 @@ const QuestionComponent = ({ documentId }) => {
         } catch (error) {
             console.error('Error:', error);
             setAnswer('Failed to get answer');
+        }finally {
+            setLoading(false);
+            setQuestion(''); 
         }
     };
     
@@ -64,8 +69,8 @@ const QuestionComponent = ({ documentId }) => {
         </div>
             <div className='releavtive'>
                 <div className='absolute w-full top-[78%]'>
-                    <form className='relative px-10 rounded rounded-2 ' autoComplete="off" onSubmit={handleAskQuestion}>
-                        <input class="w-full px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2 shadow-md" 
+                    <form className='relative px-10 rounded rounded-2 '  autoComplete="off" onSubmit={handleAskQuestion}>
+                        <input required='true' class="w-full px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2 shadow-md" 
                         placeholder='Please enter text...' 
                         type="text_content"
                         value={question}
