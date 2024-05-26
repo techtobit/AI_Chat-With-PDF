@@ -20,7 +20,6 @@ import numpy as np
 from transformers import pipeline
 
 
-# os.environ["OPENAI_API_KEY"] = ''
 
 app = FastAPI()
 
@@ -89,42 +88,6 @@ async def upload_pdf(file: UploadFile = File(...), db: SessionLocal = Depends(ge
     db.refresh(db_document)
 
     return {"id": db_document.id, "filename": db_document.filename}
-
-# Question Answer Endpoint
-# @app.post("/ask/")
-# async def ask_question(document_id: int = Query(...), question: str = Query(...), db: SessionLocal = Depends(get_db)):
-#     try:
-#         document = db.query(Document).filter(Document.id == document_id).first()
-#         if not document:
-#             raise HTTPException(status_code=404, detail="Document not found")
-
-#         text_splitter = CharacterTextSplitter(chunk_size=800, chunk_overlap=200)
-#         texts = text_splitter.split_text(document.text_content)
-
-#         # embeddings = OpenAIEmbeddings()
-#         # print('embeddings printing - ', embeddings)
-#         model = SentenceTransformer('all-MiniLM-L6-v2')  # You can choose other models as well
-#         embeddings = model.encode(texts, show_progress_bar=True)
-#         print('embeddings printing - ', embeddings)
-        
-#         vector_store = FAISS.from_texts(texts, embeddings)
-#         print('vector_store printing - ',vector_store)
-        
-#         qa_chain = load_qa_chain(llm=OpenAI(), chain_type="stuff")
-
-#         relevant_docs = vector_store.similarity_search(question)
-#         answer = qa_chain.run(input_documents=relevant_docs, question=question)
-
-#         return {"question": question, "answer": answer}
-#     except HTTPException as e:
-#         logger.error(f"HTTP error: {e.detail}")
-#         raise e
-#     except Exception as e:
-#         logger.error(f"Error processing question: {e}")
-#         if "429" in str(e):
-#             raise HTTPException(status_code=429, detail="Rate limit exceeded. Please try again later.")
-#         raise HTTPException(status_code=500, detail="Internal server error")
-
 
 
 @app.post("/ask/")

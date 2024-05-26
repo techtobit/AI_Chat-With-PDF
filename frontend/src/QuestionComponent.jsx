@@ -3,19 +3,22 @@ import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
 import icon from './assets/logo.png';
+import userIcon from './assets/user.jpeg'
+import LoadingCom from './assets/LoadingCom';
 
 const QuestionComponent = ({ documentId }) => {
     const [question, setQuestion] = useState('');
+    const [showQuestion, setshowQuestion] = useState('');
     const [loading, setLoading] = useState(false)
     const [answer, setAnswer] = useState('');
 
     const handleQuestionChange = (event) => {
         setQuestion(event.target.value);
     };
-    console.log(documentId);
-    console.log(question);
+
 
     const handleAskQuestion = async (event) => {
+        setshowQuestion(question)
         setLoading(true)
         event.preventDefault();
         try {
@@ -35,20 +38,26 @@ const QuestionComponent = ({ documentId }) => {
 
     return (
         <div className=''>
-        <div className='m-10 px-10 flex gap-4'>
+        <div className='m-10 px-10 flex gap-4 flex-col'>
+        <div>
+            {showQuestion ? <div className='flex'>
+                <img className='w-10 h-10 rounded rounded-full' src={userIcon}/>
+                <p className='pt-2 pl-4'>{showQuestion}</p>
+            </div> : ""}
+        </div>
         {
             (answer) ? 
-            <>
-            <img src={icon}/>
-            <p className='pt-2'>{answer}</p>
-            </>
+            <div className='flex'>
+            <img className='w-10 h-10 rounded rounded-full' src={icon}/>
+            <p className='pt-2 pl-4'>{answer}</p>
+            </div>
             : ''
         }
         {
-            (loading) ? <>
-            <img src={icon}/>
-            <p>loading</p>
-            </>:''
+            (loading) ? <div className='flex'>
+            <img className='w-10 h-10 rounded rounded-full' src={icon}/>
+            <div className='pt-2 pl-4'> <LoadingCom/></div>
+            </div>:''
             
         }
 
