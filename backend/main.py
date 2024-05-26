@@ -20,7 +20,7 @@ import numpy as np
 from transformers import pipeline
 
 # Set up environment variable for OpenAI API key
-os.environ["OPENAI_API_KEY"] = 'sk-proj-RnsAjd5fhRFBp8NEFmg8T3BlbkFJWXox6i40NcMslZGWPNJW'
+os.environ["OPENAI_API_KEY"] = ''
 
 app = FastAPI()
 
