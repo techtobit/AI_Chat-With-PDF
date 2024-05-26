@@ -4,13 +4,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-import fitz  # PyMuPDF
+import fitz  
 import os
 import uuid
 from langchain.vectorstores import Chroma 
 from langchain_community.vectorstores import FAISS
 from langchain_community.llms import OpenAI
-from langchain_openai import OpenAIEmbeddings  # Updated import
+from langchain_openai import OpenAIEmbeddings 
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains.question_answering import load_qa_chain
 import logging
@@ -19,16 +19,15 @@ import faiss
 import numpy as np
 from transformers import pipeline
 
-# Set up environment variable for OpenAI API key
-os.environ["OPENAI_API_KEY"] = ''
+
+# os.environ["OPENAI_API_KEY"] = ''
 
 app = FastAPI()
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# CORS setup
+
 origins = ["http://localhost", "http://localhost:8080", "http://localhost:5173"]
 
 app.add_middleware(
