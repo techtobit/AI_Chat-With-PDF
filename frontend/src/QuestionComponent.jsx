@@ -23,7 +23,7 @@ const QuestionComponent = ({ documentId }) => {
 
 
         try {
-            const response = await axios.post(`http://localhost:8000/ask/?document_id=${12}&question=${encodeURIComponent(question)}`);
+            const response = await axios.post(`http://localhost:8000/ask/?document_id=${documentId}&question=${encodeURIComponent(question)}`);
             const answer = response.data.answer;
 
             setQaList((prevQaList) => [
@@ -95,7 +95,7 @@ const QuestionComponent = ({ documentId }) => {
             </div>
                 <div className='sticky bottom-0 '>
                     <form className=' relative px-10 rounded rounded-2 ' autoComplete="off" onSubmit={handleAskQuestion}>
-                        <input required={true} class="w-full px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2 shadow-md"
+                        <input required={true} class="w-full outline-none px-4 py-4 text-sm bg-gray-100 border border-gray-300 rounded outline-2 shadow-md"
                             id='inputForm'
                             placeholder='Please enter text...'
                             type="text_content"
