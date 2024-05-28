@@ -15,16 +15,17 @@ File Storage: Local filesystem or cloud storage (e.g., AWS S3) for storing uploa
 ### FastAPI
 
 Uplaod PDF file.Post Method:
-```  try {
-        const response = axios.post('http://localhost:8000/upload/', formData, {
-        headers: {
-        'Content-Type': 'multipart/form-data'
-        });
-        setMessage(`File uploaded successfully: ${response.data.id}`);
-        onUploadSuccess(response.data.id);
-        return {errors: false}
-        } catch (error) {
-        }
+```  
+try {
+  const response = axios.post('http://localhost:8000/upload/', formData, {
+  headers: {
+  'Content-Type': 'multipart/form-data'
+  });
+  setMessage(`File uploaded successfully: ${response.data.id}`);
+  onUploadSuccess(response.data.id);
+  return {errors: false}
+  } catch (error) {
+  }
 ```
 Success(200) Response:
 ``` 
@@ -34,12 +35,49 @@ Success(200) Response:
   	"filename": "Full Stack SEO Developer  - Ashraf Uddin.pdf"
 }
 ```
-Error 
+Error Response:
 ```
-#Body
+#body
 {
   "detail": "File must be a PDF"
 }
 ```
+
+
+Ask qustions.Post Method:
+```  
+try {
+ const response = await fetch(`http://localhost:8000/ask/?document_id=${documentId}&question=${encodeURIComponent(question)}`, {
+    method: 'POST',
+  	headers: {
+    'Content-Type': 'application/json',
+    },
+  });
+  }
+```
+Success(200) Response:
+``` 
+#body
+{
+	"string"
+}
+```
+Validation Error:
+```
+
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+```
+
 
 
