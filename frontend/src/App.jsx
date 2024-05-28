@@ -6,7 +6,7 @@ function App() {
     const [documentId, setDocumentId] = useState(1);
 
     return (
-        <div className="bg-white  text-black h-screen w-screen justify-center">
+        <div className="bg-white  text-black w-screen justify-center">
             <UploadComponent onUploadSuccess={setDocumentId} />
             <QuestionComponent documentId={documentId} />
         </div>

@@ -97,22 +97,21 @@ async def ask_question(document_id: int = Query(...), question: str = Query(...)
         if not document:
             raise HTTPException(status_code=404, detail="Document not found")
 
-        text_splitter = CharacterTextSplitter(chunk_size=800, chunk_overlap=200)
+        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=600)
         texts = text_splitter.split_text(document.text_content)
 
-        # Use Sentence Transformers for embeddings
-        model = SentenceTransformer('all-MiniLM-L6-v2')  # You can choose other models as well
+        model = SentenceTransformer('all-MiniLM-L6-v2')  
         embeddings = model.encode(texts, show_progress_bar=True)
         print('embeddings printing - ', embeddings)
 
-        # Initialize FAISS index
+        
         dimension = embeddings.shape[1]
-        index = faiss.IndexFlatL2(dimension)  # Using L2 distance metric
+        index = faiss.IndexFlatL2(dimension) 
         index.add(embeddings)
 
         # Encode the question to find similar documents
         question_embedding = model.encode([question])
-        distances, indices = index.search(question_embedding, k=35)  # Adjust k as needed
+        distances, indices = index.search(question_embedding, k=20) 
 
         # Retrieve the most relevant texts
         relevant_texts = [texts[i] for i in indices[0]]
