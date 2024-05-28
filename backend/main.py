@@ -7,25 +7,23 @@ from datetime import datetime
 import fitz  
 import os
 import uuid
-from langchain_community.vectorstores import Chroma
-from langchain_community.vectorstores import FAISS
-from langchain_community.llms import OpenAI
-from langchain_openai import OpenAIEmbeddings 
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+# from langchain_google_genai import GoogleGenAIEmbeddings, GoogleGenAIQuestionAnswering
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.chains.question_answering import load_qa_chain
 import logging
-from sentence_transformers import SentenceTransformer
-import faiss 
+import faiss
 import numpy as np
-from transformers import pipeline
+from dotenv import load_dotenv
+import google.generativeai as genai
 
+load_dotenv()
 
-
+genai.configure(api_key = os.getenv("GOOGLE_API_KEY")) 
+GOOGLE_API_KEY = "AIzaSyAB-6edT4q-p9VU3Kz5d66-FQOK48BtRgs"
 app = FastAPI()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 origins = ["http://localhost", "http://localhost:8080", "http://localhost:5173"]
 
@@ -100,28 +98,30 @@ async def ask_question(document_id: int = Query(...), question: str = Query(...)
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=600)
         texts = text_splitter.split_text(document.text_content)
 
-        model = SentenceTransformer('all-MiniLM-L6-v2')  
-        embeddings = model.encode(texts, show_progress_bar=True)
-        print('embeddings printing - ', embeddings)
+        # Generate embeddings for the text chunks using Google GenAI
+        genai_embeddings = GoogleGenerativeAIEmbeddings()
+        print('printing emb :-', genai_embeddings)
+        embeddings = genai_embeddings.encode(texts)
 
-        
+        # Use FAISS for nearest neighbor search
         dimension = embeddings.shape[1]
-        index = faiss.IndexFlatL2(dimension) 
+        index = faiss.IndexFlatL2(dimension)
         index.add(embeddings)
 
         # Encode the question to find similar documents
-        question_embedding = model.encode([question])
-        distances, indices = index.search(question_embedding, k=20) 
+        question_embedding = genai_embeddings.encode([question])
+        distances, indices = index.search(question_embedding, k=20)
 
         # Retrieve the most relevant texts
         relevant_texts = [texts[i] for i in indices[0]]
 
-        # Use Hugging Face's pipeline for QA
-        qa_pipeline = pipeline("question-answering")
+        # Use Google GenAI for question answering
+        genai_qa = GoogleGenAIQuestionAnswering()
         context = " ".join(relevant_texts)
-        result = qa_pipeline(question=question, context=context)
+        result = genai_qa.answer(question=question, context=context)
         answer = result['answer']
         print('result :-', answer)
+
         return {"question": question, "answer": answer}
     except HTTPException as e:
         logger.error(f"HTTP error: {e.detail}")
